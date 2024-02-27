@@ -36,7 +36,7 @@ function requestOperation(array $operations): int
 {
     do {
         echo 'Выберите операцию для выполнения: ' . PHP_EOL;
-        echo implode(PHP_EOL, $operations) . PHP_EOL . '> ';
+        echo phpHomeWork4 . phpimplode(PHP_EOL, $operations) . PHP_EOL . '> ';
         $operationNumber = (int)trim(fgets(STDIN));
 
         if (!array_key_exists($operationNumber, $operations)) {
@@ -137,5 +137,5 @@ do {
     echo "\n ----- \n";
 } while ($operationNumber > 0);
 
-echo 'Программа завершена' . PHP_EOL;
+echo 'Программа зaвершена' . PHP_EOL;
 ?>
