@@ -12,7 +12,7 @@ $number1 = intval($number1);
 $number2 = intval($number2);
 
 if ($number2 == 0) {
-    fwrite(STDERR, "Делить  на 0 нельзя\n");
+    fwrite(STDERR, "Делить на 0 нельзя\n");
     exit(1);
 }
 
