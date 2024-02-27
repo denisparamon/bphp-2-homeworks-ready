@@ -6,12 +6,16 @@ const OPERATION_EXIT = 0;
 const OPERATION_ADD = 1;
 const OPERATION_DELETE = 2;
 const OPERATION_PRINT = 3;
+const OPERATION_EDIT_NAME = 4;
+const OPERATION_ADD_QUANTITY = 5;
 
 $operations = [
     OPERATION_EXIT => OPERATION_EXIT . '. Завершить программу.',
     OPERATION_ADD => OPERATION_ADD . '. Добавить товар в список покупок.',
     OPERATION_DELETE => OPERATION_DELETE . '. Удалить товар из списка покупок.',
     OPERATION_PRINT => OPERATION_PRINT . '. Отобразить список покупок.',
+    OPERATION_EDIT_NAME => OPERATION_EDIT_NAME . '. Изменить название товара.',
+    OPERATION_ADD_QUANTITY => OPERATION_ADD_QUANTITY . '. Добавить количество товара.',
 ];
 
 $items = [];
@@ -20,7 +24,9 @@ function displayShoppingList(array $items): void
 {
     if (count($items)) {
         echo 'Ваш список покупок: ' . PHP_EOL;
-        echo implode("\n", $items) . "\n";
+        foreach ($items as $itemName => $quantity) {
+            echo "$itemName (Количество: $quantity)" . PHP_EOL;
+        }
     } else {
         echo 'Ваш список покупок пуст.' . PHP_EOL;
     }
@@ -43,32 +49,56 @@ function requestOperation(array $operations): int
 
 function addItem(array &$items): void
 {
-    echo "Введение название товара для добавления в список: \n> ";
+    echo "Введите название товара для добавления в список: \n> ";
     $itemName = trim(fgets(STDIN));
-    $items[] = $itemName;
+    echo "Введите количество товара: \n> ";
+    $quantity = (int)trim(fgets(STDIN));
+    $items[$itemName] = $quantity;
 }
 
 function deleteItem(array &$items): void
 {
     $itemName = requestItemName($items, 'для удаления из списка');
-    if (in_array($itemName, $items, true)) {
-        while (($key = array_search($itemName, $items, true)) !== false) {
-            unset($items[$key]);
-        }
+    if (isset($items[$itemName])) {
+        unset($items[$itemName]);
+    }
+}
+
+function editItemName(array &$items): void
+{
+    $itemName = requestItemName($items, 'для изменения названия');
+    if (isset($items[$itemName])) {
+        echo "Введите новое название для товара '$itemName': \n> ";
+        $newName = trim(fgets(STDIN));
+        $items[$newName] = $items[$itemName];
+        unset($items[$itemName]);
+    } else {
+        echo "Товар '$itemName' не найден в списке." . PHP_EOL;
+    }
+}
+
+function addItemQuantity(array &$items): void
+{
+    $itemName = requestItemName($items, 'для добавления количества');
+    if (isset($items[$itemName])) {
+        echo "Введите количество для добавления к товару '$itemName': \n> ";
+        $quantityToAdd = (int)trim(fgets(STDIN));
+        $items[$itemName] += $quantityToAdd;
+    } else {
+        echo "Товар '$itemName' не найден в списке." . PHP_EOL;
     }
 }
 
 function requestItemName(array $items, string $action): string
 {
     displayShoppingList($items);
-    echo "Введение название товара $action:" . PHP_EOL . '> ';
+    echo "Введите название товара $action:" . PHP_EOL . '> ';
     return trim(fgets(STDIN));
 }
 
 function printShoppingList(array $items): void
 {
     displayShoppingList($items);
-    echo 'Всего ' . count($items) . ' позиций. ' . PHP_EOL;
     echo 'Нажмите enter для продолжения';
     fgets(STDIN);
 }
@@ -94,9 +124,18 @@ do {
         case OPERATION_PRINT:
             printShoppingList($items);
             break;
+
+        case OPERATION_EDIT_NAME:
+            editItemName($items);
+            break;
+
+        case OPERATION_ADD_QUANTITY:
+            addItemQuantity($items);
+            break;
     }
 
     echo "\n ----- \n";
 } while ($operationNumber > 0);
 
-echo 'Программа  завершена' . PHP_EOL;
+echo 'Программа завершена' . PHP_EOL;
+?>
