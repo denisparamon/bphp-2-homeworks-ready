@@ -137,5 +137,5 @@ do {
     echo "\n ----- \n";
 } while ($operationNumber > 0);
 
-echo 'Программа завершена' . PHP_EOL;
+echo 'Программа зaвершена' . PHP_EOL;
 ?>
