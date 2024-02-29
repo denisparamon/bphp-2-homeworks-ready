@@ -64,3 +64,5 @@ function calculateSchedule() {
 };
 
 calculateSchedule(); // Вызов функции для расчета графика работы
+
+?>
